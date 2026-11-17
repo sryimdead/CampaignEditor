@@ -1,0 +1,28 @@
+app:
+  database_url: sqlite:///./campaign_editor.db
+  cors_origins:
+    - http://localhost:5173
+
+keitaro:
+  api_key_header: Api-Key
+  timeout_seconds: 15
+  campaign_defaults:
+    domain: kylovoa.com
+    group_name: FORTESTS
+    traffic_source_name: FORTESTS
+    # Значение type для кампании при создании (ротация потоков: position или weight)
+    campaign_type: position
+
+  stream:
+    type: regular
+    # Фильтр по странам для потока geo_redirect. Несколько стран передаются списком через запятую.
+    country_filter:
+      name: country
+      mode: accept
+    geo_redirect:
+      schema: redirect
+      url: https://www.google.com
+      position: 1
+    offer:
+      schema: landings
+      position: 2  # без фильтров: сюда попадает весь трафик, не прошедший первый поток

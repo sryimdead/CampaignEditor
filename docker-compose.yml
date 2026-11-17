@@ -1,0 +1,33 @@
+name: campaign-editor
+
+services:
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    # Секреты: файл должен существовать до запуска (см. README)
+    volumes:
+      - ./backend/local_config.yaml:/app/local_config.yaml:ro
+      - backend-data:/data
+    expose:
+      - "8000"
+    # Чтобы контейнер достучался до Keitaro, работающего на этой же машине (адрес host.docker.internal)
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-8080}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  backend-data:

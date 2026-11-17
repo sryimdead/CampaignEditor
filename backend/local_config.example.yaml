@@ -1,0 +1,3 @@
+keitaro:
+  base_url: https://your-keitaro.example.com
+  api_key: "PASTE_YOUR_KEITARO_API_KEY"
